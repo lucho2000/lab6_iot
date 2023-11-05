@@ -2,6 +2,7 @@ package com.example.lab6_iot;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
@@ -23,6 +24,9 @@ public class JuegoMemoriaActivity extends AppCompatActivity {
 
     TextView textCuenta;
 
+    List<Uri> selectedImageUris;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,12 +36,13 @@ public class JuegoMemoriaActivity extends AppCompatActivity {
 
         textCuenta = findViewById(R.id.textView4);
 
-        ViewPager imageViewPager = findViewById(R.id.imageViewPager); //carrusel
 
-        //List<Uri> imageUris = obtenerUrisDeImagenes(); // Debes implementar esta función para obtener las URIs de tus imágenes.
+        //ImageAdapter imageAdapter = new ImageAdapter(selectedImageUris);
+        //imageAdapter.setContext(JuegoMemoriaActivity.this);
+        //imageAdapter.setImageUris(selectedImageUris);
 
-        //ImageAdapter imageAdapter = new ImageAdapter(this, imageUris);
-        //imageViewPager.setAdapter(imageAdapter);
+        //binding.recyclerView.setAdapter(imageAdapter);
+        //binding.recyclerView.setLayoutManager(new LinearLayoutManager(JuegoMemoriaActivity.this, LinearLayoutManager.HORIZONTAL, false));
 
 
         //pedir imagen
@@ -56,12 +61,34 @@ public class JuegoMemoriaActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null){
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
 
             Uri selectedImageUri = data.getData();
             contadorImagenes++;
             // Actualiza el TextView con el nuevo conteo de imágenes
             textCuenta.setText("" + contadorImagenes);
+
+//            if (data != null) {
+//                if (data.getClipData() != null) {
+//                    // Cuando se seleccionan múltiples imágenes
+//                    int count = data.getClipData().getItemCount();
+//                    for (int i = 0; i < count; i++) {
+//                        Uri imageUri = data.getClipData().getItemAt(i).getUri();
+//                        selectedImageUris.add(imageUri);
+//                        contadorImagenes++;
+//                        // Actualiza el TextView con el nuevo conteo de imágenes
+//                        textCuenta.setText("" + contadorImagenes);
+//                        // Aquí puedes manejar la URI de la imagen, por ejemplo, agregarla a una lista.
+//                    }
+//                } else if (data.getData() != null) {
+//                    // Cuando se selecciona una única imagen
+//                    Uri imageUri = data.getData();
+//                    contadorImagenes++;
+//                    textCuenta.setText("" + contadorImagenes);
+//                    // Aquí puedes manejar la URI de la imagen, por ejemplo, agregarla a una lista.
+//                }
+//            }
         }
+
     }
 }
