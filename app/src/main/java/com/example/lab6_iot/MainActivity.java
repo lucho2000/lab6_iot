@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         binding.buttonSMemory.setOnClickListener(view -> {
-
+            Intent intent = new Intent(MainActivity.this, JuegoMemoriaActivity.class);
+            startActivity(intent);
 
         });
 

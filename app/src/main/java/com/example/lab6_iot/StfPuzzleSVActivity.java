@@ -110,7 +110,7 @@ public class StfPuzzleSVActivity extends AppCompatActivity {
 
         int piecesNumber = 12; //12 piezas
         int rows = 4;
-        int cols = 3;
+        int cols = 4;
 
         ImageView imageView = findViewById(R.id.imageView2);
         ArrayList<Piece> pieces = new ArrayList<>(piecesNumber); //resultado de las piezas guardadas
