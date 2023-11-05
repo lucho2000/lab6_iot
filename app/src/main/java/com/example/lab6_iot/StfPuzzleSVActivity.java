@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.example.lab6_iot.databinding.ActivityStfPuzzleSvactivityBinding;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -84,13 +85,23 @@ public class StfPuzzleSVActivity extends AppCompatActivity {
         imageView.post(new Runnable() {
             @Override
             public void run() {
-                pieces = splitImage();
-                TouchListener touchListener = new TouchListener();
+
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.crash);
+                pieces = splitImage(bitmap);
+                TouchListener touchListener = new TouchListener(StfPuzzleSVActivity.this);
+                // shuffle pieces order
+                Collections.shuffle(pieces);
                 for (Piece piece : pieces) {
                     //ImageView iv = new ImageView(getApplicationContext());
                     //iv.setImageBitmap(piece);
                     piece.setOnTouchListener(touchListener);
                     layout.addView(piece);
+
+                    // randomize position, on the bottom of the screen
+                    RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) piece.getLayoutParams();
+                    lParams.leftMargin = new Random().nextInt(layout.getWidth() - piece.pieceWidth);
+                    lParams.topMargin = layout.getHeight() - piece.pieceHeight;
+                    piece.setLayoutParams(lParams);
                 }
             }
         });
@@ -139,7 +150,7 @@ public class StfPuzzleSVActivity extends AppCompatActivity {
 
 
 
-    public ArrayList<Piece> splitImage () {
+    public ArrayList<Piece> splitImage (Bitmap bitmap) {
 
         int piecesNumber = 16; //12 piezas
         int rows = 4;
@@ -149,8 +160,8 @@ public class StfPuzzleSVActivity extends AppCompatActivity {
         ArrayList<Piece> pieces = new ArrayList<>(piecesNumber); //resultado de las piezas guardadas
 
         // Get the bitmap of the source image
-        BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
-        Bitmap bitmap = drawable.getBitmap();
+        //BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+        //Bitmap bitmap = drawable.getBitmap();
 
         int[] dimensions = getBitmapPositionInsideImageView(imageView); //metodo de abajo
         int scaledBitmapLeft = dimensions[0];
@@ -319,4 +330,38 @@ public class StfPuzzleSVActivity extends AppCompatActivity {
     }
 
 
+    public void checkGameOver() {
+        if (isGameOver()) {
+            Toast.makeText(this, "El juego terminó, inicie de nuevo para volver a jugar", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    }
+
+    private boolean isGameOver() {
+        for (Piece piece : pieces) {
+            if (piece.canMove) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK) {
+            if (data != null) {
+                Uri selectedImageUri = data.getData();
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
+                    splitImage(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }
