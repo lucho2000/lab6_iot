@@ -332,7 +332,7 @@ public class StfPuzzleSVActivity extends AppCompatActivity {
 
     public void checkGameOver() {
         if (isGameOver()) {
-            Toast.makeText(this, "El juego terminó, inicie de nuevo para volver a jugar", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Ganaste, vuelve a jugar", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
